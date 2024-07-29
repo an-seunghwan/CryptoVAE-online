@@ -12,7 +12,7 @@ def main():
     
     st.write(f"""
     #### Settings
-    - Cryptocurrencies: `BTC`, `ETH`, `XRP`, `ADA`, `ETC`, `BCH`, `XLM`
+    - 7 cryptocurrencies: `BTC`, `ETH`, `XRP`, `ADA`, `ETC`, `BCH`, `XLM`
     - Train dataset window: {data.index[0]} ~ {data.index[-1]}
     - All cryptocurrency prices are scaled.
     - This result is based on the official implementation of 'Cryptocurrency Price Forecasting using Variational AutoEncoder with Versatile Quantile Modeling' (CIKM, 2024).
