@@ -14,6 +14,7 @@ def main():
     #### Settings
     - 7 cryptocurrencies: `BTC`, `ETH`, `XRP`, `ADA`, `ETC`, `BCH`, `XLM`
     - Train dataset window: {data.index[0]} ~ {data.index[-1]}
+    - Our daily forecasting is based on the past 20 days.
     - This result is based on the official implementation of 'Cryptocurrency Price Forecasting using Variational AutoEncoder with Versatile Quantile Modeling' (CIKM, 2024).
         - We forecast 10%, 50%, 90% quantiles (interval estimation).
     """)

@@ -50,7 +50,7 @@ def get_args(debug):
     parser.add_argument("--test_len", default=200, type=int,
                         help="length of test dataset")
     
-    parser.add_argument("--MC", default=100, type=int,
+    parser.add_argument("--MC", default=500, type=int,
                         help="the number of samples in Monte Carlo sampling")
     parser.add_argument('--epochs', default=400, type=int,
                         help='the number of epochs')
@@ -73,7 +73,7 @@ def get_args(debug):
 #%%
 def main():
     #%%
-    config = vars(get_args(debug=False)) # default configuration
+    config = vars(get_args(debug=True)) # default configuration
     
     """load config"""
     config_path = f'./configs/{config["model"]}.yaml'
