@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Activate virtual environment
-source ~/anaconda3/envs/crypto/bin/activate
+source /opt/anaconda3/envs/crypto/bin/activate
 
 # Navigate to project directory
 cd /Users/anseunghwan/Documents/GitHub/CryptoVAE-online
