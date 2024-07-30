@@ -1,9 +1,5 @@
 #!/bin/bash
 
-exp=(
-"--model GLD_finite"
-)
+python dataset.py # build train dataset
 
-for i2 in ${!exp[*]}; do
-    python main.py ${exp[$i2]}
-done
+python main.py --model GLD_finite # train model

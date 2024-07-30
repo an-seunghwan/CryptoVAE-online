@@ -1,21 +1,12 @@
 #%%
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-import numpy as np
 import pandas as pd
-import tqdm
-import matplotlib.pyplot as plt
-
+from datetime import datetime
 import torch
-from torch import nn
-import torch.nn.functional as F
-from torch.utils.data import TensorDataset, DataLoader
-from torch.utils.data import Dataset
 
 import sys
 sys.path.append('./modules')
-
 import importlib
 layers = importlib.import_module('modules.layers')
 importlib.reload(layers)
@@ -160,7 +151,7 @@ def main():
             print(print_input)
     #%%
     """model save"""
-    torch.save(model.state_dict(), f'./assets/models/{config["model"]}.pth')
+    torch.save(model.state_dict(), f'assets/{config["model"]}.pth')
     #%%
     """Quantile Estimation"""
     alphas = [0.1, 0.5, 0.9]
@@ -178,7 +169,7 @@ def main():
     forecasts = [Q[-1] for Q in est_quantiles]
     #%%
     """Visualize"""
-    fig = utils.visualize_quantile(target_, estQ, colnames, forecasts, show=False)
+    fig = utils.visualize_quantile(target_, estQ, colnames, forecasts, scaling_dict, show=False)
     #%%
     """Forecasting results"""
     df_forecast = []
@@ -191,9 +182,19 @@ def main():
                 forecasts[2][0, j].item(),
             ]
         )
-    pd.DataFrame(df_forecast, columns=["names", "10%", "50%", "90%"]).to_csv(
-        "assets/forecasting.csv"
-    )
+    df_forecast = pd.DataFrame(df_forecast, columns=["names", "10%", "50%", "90%"])
+    df_forecast.to_csv("assets/forecasting.csv") # tomorrow
+    #%%
+    try:
+        history = pd.read_csv("assets/history.csv", index_col=0)
+    except:
+        history = pd.DataFrame()
+    tomorrow = datetime.strftime(
+        pd.to_datetime(df.index[-1]) + pd.Timedelta('24:00:00'), 
+    '%Y-%m-%d %H:%M:%S')
+    df_forecast["time"] = tomorrow
+    history = pd.concat([history, df_forecast], axis=0)
+    history.to_csv("assets/history.csv")
 #%%
 if __name__ == '__main__':
     main()

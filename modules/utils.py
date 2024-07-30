@@ -75,7 +75,7 @@ def build_datasets(df, test_len, config):
     
     return train_list, test_list
 #%%
-def visualize_quantile(target_, estQ, colnames, forecasts, show=False):
+def visualize_quantile(target_, estQ, colnames, forecasts, scaling_dict, show=False):
     recent = 100
     mpl.rcParams["figure.dpi"] = 200
     mpl_style(dark=False)
@@ -94,32 +94,32 @@ def visualize_quantile(target_, estQ, colnames, forecasts, show=False):
     fig, ax = plt.subplots(4, 2, figsize=(30, 30))
     for j in range(estQ[1].size(1)):
         ax.flatten()[j].plot(
-            np.arange(recent), target_[-recent:, j],
+            np.arange(recent), target_[-recent:, j] * scaling_dict.get(colnames[j]),
             label=f"{colnames[j]}", color="black", linewidth=4, linestyle='--')
         ax.flatten()[j].plot(
-            np.arange(recent), estQ[1][-recent:, j],
+            np.arange(recent), estQ[1][-recent:, j] * scaling_dict.get(colnames[j]),
             label="Median", color='green', linewidth=4)
         ax.flatten()[j].fill_between(
             np.arange(recent), 
-            estQ[0][-recent:, j], 
-            estQ[2][-recent:, j], 
+            estQ[0][-recent:, j] * scaling_dict.get(colnames[j]), 
+            estQ[2][-recent:, j] * scaling_dict.get(colnames[j]), 
             color=cols[3], alpha=0.5, label=r'80% interval')
         ### online
         ax.flatten()[j].scatter(
-            np.arange(recent, recent+1), forecasts[1][:, j],
+            np.arange(recent, recent+1), forecasts[1][:, j] * scaling_dict.get(colnames[j]),
             color='red', s=500, marker='x', linewidth=6)
         ax.flatten()[j].scatter(
-            np.arange(recent, recent+1), forecasts[0][:, j],
+            np.arange(recent, recent+1), forecasts[0][:, j] * scaling_dict.get(colnames[j]),
             color=cols[0], s=500, marker='^', linewidth=4)
         ax.flatten()[j].scatter(
-            np.arange(recent, recent+1), forecasts[2][:, j],
+            np.arange(recent, recent+1), forecasts[2][:, j] * scaling_dict.get(colnames[j]),
             color=cols[0], s=500, marker='v', linewidth=4)
         ax.flatten()[j].set_ylabel(f"{colnames[j]}")
         ax.flatten()[j].set_xlabel("days")
         ax.flatten()[j].legend(loc="upper left")
     ax[-1, -1].axis('off')
     plt.tight_layout()
-    plt.savefig(f"./assets/fig/result.png", bbox_inches='tight')
+    plt.savefig(f"./assets/result.png", bbox_inches='tight')
     if show:
         plt.show()
     plt.close()
