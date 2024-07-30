@@ -14,9 +14,19 @@ def main():
     #### Settings
     - 7 cryptocurrencies: `BTC`, `ETH`, `XRP`, `ADA`, `ETC`, `BCH`, `XLM`
     - Train dataset window: {data.index[0]} ~ {data.index[-1]}
-    - All cryptocurrency prices are scaled.
     - This result is based on the official implementation of 'Cryptocurrency Price Forecasting using Variational AutoEncoder with Versatile Quantile Modeling' (CIKM, 2024).
+        - We forecast 10%, 50%, 90% quantiles (interval estimation).
     """)
+    
+    scaling_dict = {
+        "BTC": 1e7,
+        "ETH": 1e6,
+        "XRP": 1e2,
+        "ADA": 1e2,
+        "ETC": 1e4,
+        "XLM": 1e2,
+        "BCH": 1e5,
+    }
     
     today = datetime.strftime(
         pd.to_datetime(data.index[-1]), 
@@ -24,27 +34,29 @@ def main():
     tomorrow = datetime.strftime(
         pd.to_datetime(data.index[-1]) + pd.Timedelta('24:00:00'), 
         '%Y-%m-%d %H:%M:%S')
-    st.write("#### Cryptocurrency Price for Tomorrow")
     df = pd.read_csv("./assets/forecasting.csv", index_col=0)
     df["Today"] = data.iloc[-1].values
+    df["Scale(KRW)"] = pd.DataFrame.from_dict(scaling_dict, orient="index").values
     
-    col1, col2 = st.columns(2)
+    st.write("#### Cryptocurrency Price for Tomorrow")
+    col1, col2 = st.columns([2, 3])
     with col1:
-        st.write(f"- Today's price ({today})")
-        st.dataframe(df[["names", "Today"]], height=300)
+        st.write(f"- Today's ({today})")
+        st.dataframe(df[["names", "Today", "Scale(KRW)"]], height=300)
     with col2:
-        st.write(f"- Tomorrow's price ({tomorrow})")
-        st.dataframe(df[["names", "10%", "50%", "90%"]], height=300)
+        st.write(f"- Tomorrow's ({tomorrow})")
+        st.dataframe(df[["names", "10%", "50%", "90%", "Scale(KRW)"]], height=300)
     
     st.write("#### Trends in 100-Day Forecasting Results")
     st.write("""
     - Tomorrow:
-        - Orange downward triangle: 90% quantile
-        - **x**: median
-        - Orange upward triangle: 10% quantile
+        - Orange downward triangle: 90% Quantile
+        - **x**: Median
+        - Orange upward triangle: 10% Quantile
     """)
     st.image("assets/result.png")
     st.write("""
+    - Train Dataset:
         - Dashed black line: **Actual** cryptocurrency prices
         - Green solid line: **Median** of predicted cryptocurrency prices
         - Blue area: **80% prediction interval** for cryptocurrency prices
