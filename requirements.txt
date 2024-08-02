@@ -1,0 +1,5 @@
+numpy
+pandas
+matplotlib
+streamlit
+ing_theme_matplotlib
