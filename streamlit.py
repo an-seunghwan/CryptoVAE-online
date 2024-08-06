@@ -140,7 +140,7 @@ def main():
             label=f"KRW-{cryptos[j]}", color="black", linewidth=6, linestyle='--')
         ax.flatten()[j].set_ylabel(f"{cryptos[j]}")
         # ax.flatten()[j].set_xlabel("days")
-        ax.flatten()[j].legend(loc="lower right")
+        ax.flatten()[j].legend(loc="lower left")
         ax.flatten()[j].tick_params(axis='x', rotation=45)
     ax[-1, -1].axis('off')
     plt.tight_layout()
