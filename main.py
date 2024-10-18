@@ -184,17 +184,6 @@ def main():
         )
     df_forecast = pd.DataFrame(df_forecast, columns=["names", "10%", "50%", "90%"])
     df_forecast.to_csv("assets/forecasting.csv") # tomorrow
-    #%%
-    try:
-        history = pd.read_csv("assets/history.csv", index_col=0)
-    except:
-        history = pd.DataFrame()
-    tomorrow = datetime.strftime(
-        pd.to_datetime(df.index[-1]) + pd.Timedelta('24:00:00'), 
-    '%Y-%m-%d %H:%M:%S')
-    df_forecast["time"] = tomorrow
-    history = pd.concat([history, df_forecast], axis=0)
-    history.to_csv("assets/history.csv")
 #%%
 if __name__ == '__main__':
     main()
